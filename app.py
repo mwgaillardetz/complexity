@@ -8,8 +8,39 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "default_secret_key")  # For flash messages
 
+# Function to update the .env file without overwriting
+def update_env_file():
+    try:
+        with open(".env", "r") as env_file:
+            lines = env_file.readlines()
+
+        updated_vars = {
+            "FIELD1": os.environ["FIELD1"],
+            "FIELD2": os.environ["FIELD2"],
+            "FIELD3": os.environ["FIELD3"],
+            "FIELD4": os.environ["FIELD4"],
+            "FIELD5": os.environ["FIELD5"],
+        }
+
+        with open(".env", "w") as env_file:
+            for line in lines:
+                for key, value in updated_vars.items():
+                    if line.startswith(f"{key}="):
+                        line = f"{key}={value}\n"
+                        break
+                env_file.write(line)
+
+            for key, value in updated_vars.items():
+                if not any(line.startswith(f"{key}=") for line in lines):
+                    env_file.write(f"{key}={value}\n")
+    except IOError as e:
+        flash(f"Error saving settings: {str(e)}", "danger")
+        return redirect(url_for("settings"))
+
 # Route for the settings page
 @app.route("/settings", methods=["GET", "POST"])
+def index():
+    return render_template("index.html")
 def settings():
     if request.method == "POST":
         # Update environment variables
@@ -20,12 +51,7 @@ def settings():
         os.environ["FIELD5"] = request.form.get("field5", "")
 
         # Update the .env file
-        with open(".env", "w") as env_file:
-            env_file.write(f"FIELD1={os.environ['FIELD1']}\n")
-            env_file.write(f"FIELD2={os.environ['FIELD2']}\n")
-            env_file.write(f"FIELD3={os.environ['FIELD3']}\n")
-            env_file.write(f"FIELD4={os.environ['FIELD4']}\n")
-            env_file.write(f"FIELD5={os.environ['FIELD5']}\n")
+        update_env_file()
 
         flash("Settings updated successfully!", "success")
         return redirect(url_for("settings"))
@@ -41,4 +67,4 @@ def settings():
     return render_template("settings.html", settings=settings)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5020)

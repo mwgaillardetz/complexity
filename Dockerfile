@@ -1,20 +1,17 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# Use an official Python runtime
+FROM python:3.12-slim
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
+# Copy the app and dependencies
+COPY . /app
 
-# Install any needed packages specified in requirements.txt
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 5020 available to the world outside this container
+# Expose Flask's port
 EXPOSE 5020
 
-# Define environment variable
-ENV FLASK_APP=app.py
-
-# Run app.py when the container launches
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Run the app
+CMD ["python", "app.py"]
