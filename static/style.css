@@ -1,29 +1,68 @@
-body {
-    font-family: Arial, sans-serif;
+/* General Reset */
+body, html {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    background-color: #2B2B2B; /* Dark grey */
+    color: #FFFFFF;
 }
 
+/* Navigation Styles */
+nav {
+    background-color: #1F1F1F;
+    padding: 1rem;
+    text-align: center;
+}
+
+.nav-link {
+    margin: 0 1rem;
+    color: #32CD32; /* Lime Green */
+    font-weight: bold;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: #FFD700; /* Yellow */
+}
+
+/* Header Styles */
 header {
-    background: #0073e6;
-    color: #fff;
-    padding: 20px;
     text-align: center;
+    padding: 1.5rem 1rem;
+    background-color: #333333;
+    color: #FFD700;
 }
 
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Main Content Styles */
 main {
-    margin: 20px;
-    padding: 20px;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.9em;
-    color: #666;
+.intro h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #32CD32;
+}
+
+.intro p {
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+}
+
+.cta-button {
+    background-color: #32CD32;
+    color: #2B2B2B;
+    padding: 0.8rem 1.5rem;
+    border: none;
 }
