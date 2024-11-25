@@ -1,0 +1,28 @@
+---
+services:
+  web:
+    build: .
+    ports:
+      - "5020:5020"
+    depends_on:
+      - redis
+    environment:
+      - FLASK_APP=${FLASK_APP}
+      - FLASK_ENV=${FLASK_ENV}
+    command: flask run --host=0.0.0.0
+    network_mode: host
+
+  celery:
+    build: .
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER=${CELERY_BROKER}
+    command: celery -A app.celery worker --loglevel=info
+    network_mode: host
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    network_mode: host

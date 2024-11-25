@@ -19,6 +19,46 @@
         <section class="intro">
             <h2>Discover Your Playlist Manager</h2>
            <p>Create, view, and manage playlists seamlessly.</p>
+           <button id="run-script-btn">Sync playlists</button>
+           <div id="response-message"></div>
+
+           <script>
+               $(document).ready(function() {
+                   $('#run-script-btn').click(function() {
+                       $.ajax({
+                           url: '/run_script',
+                           type: 'POST',
+                           success: function(response) {
+                               $('#response-message').html(`<p>Task started. Task ID: ${response.task_id}</p>`);
+                               checkTaskStatus(response.task_id); // Check status after starting task
+                           },
+                           error: function(xhr, status, error) {
+                               $('#response-message').html(`<p style="color: red;">Error: ${xhr.responseJSON.message}</p>`);
+                           }
+                       });
+                   });
+
+                   // Function to check the task status
+                   function checkTaskStatus(taskId) {
+                       setInterval(function() {
+                           $.ajax({
+                               url: `/task_status/${taskId}`,
+                               type: 'GET',
+                               success: function(response) {
+                                   if (response.status === 'success') {
+                                       $('#response-message').html(`<p style="color: green;">${response.message}</p>`);
+                                   } else if (response.status === 'error') {
+                                       $('#response-message').html(`<p style="color: red;">Error: ${response.message}</p>`);
+                                   }
+                               },
+                               error: function(xhr, status, error) {
+                                   $('#response-message').html(`<p style="color: red;">Error: ${xhr.responseJSON.message}</p>`);
+                               }
+                           });
+                       }, 3000); // Check every 3 seconds
+                   }
+               });
+           </script>
         </section>
     </main>
     <footer>
