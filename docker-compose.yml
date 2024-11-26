@@ -1,4 +1,3 @@
----
 services:
   web:
     build: .
@@ -9,6 +8,14 @@ services:
     environment:
       - FLASK_APP=${FLASK_APP}
       - FLASK_ENV=${FLASK_ENV}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - PLEX_LIBRARY_SECTION_ID=${PLEX_LIBRARY_SECTION_ID}
+      - client_id=${client_id}
+      - client_secret=${client_secret}
+      - playlist_ids=${playlist_ids}
     command: flask run --host=0.0.0.0
     network_mode: host
 
@@ -18,6 +25,14 @@ services:
       - redis
     environment:
       - CELERY_BROKER=${CELERY_BROKER}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - PLEX_LIBRARY_SECTION_ID=${PLEX_LIBRARY_SECTION_ID}
+      - client_id=${client_id}
+      - client_secret=${client_secret}
+      - playlist_ids=${playlist_ids}
     command: celery -A app.celery worker --loglevel=info
     network_mode: host
 

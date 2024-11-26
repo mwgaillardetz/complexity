@@ -19,46 +19,31 @@
         <section class="intro">
             <h2>Discover Your Playlist Manager</h2>
            <p>Create, view, and manage playlists seamlessly.</p>
-           <button id="run-script-btn">Sync playlists</button>
-           <div id="response-message"></div>
+           <button onclick="location.href='/sync-playlists'">Sync Playlists</button>
+        <!-- Modal Window -->
+            <div id="outputModal" style="display:none;">
+                <div>
+                    <span id="closeModal" style="cursor:pointer;">&times;</span>
+                    <h2>Sync Output</h2>
+                    <pre id="outputContent"></pre>
+                </div>
+            </div>
 
-           <script>
-               $(document).ready(function() {
-                   $('#run-script-btn').click(function() {
-                       $.ajax({
-                           url: '/run_script',
-                           type: 'POST',
-                           success: function(response) {
-                               $('#response-message').html(`<p>Task started. Task ID: ${response.task_id}</p>`);
-                               checkTaskStatus(response.task_id); // Check status after starting task
-                           },
-                           error: function(xhr, status, error) {
-                               $('#response-message').html(`<p style="color: red;">Error: ${xhr.responseJSON.message}</p>`);
-                           }
-                       });
-                   });
+            <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+            <script>
+            document.getElementById('syncButton').addEventListener('click', function() {
+                fetch('/sync-playlists')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('outputContent').textContent = data.output;
+                        document.getElementById('outputModal').style.display = 'block';
+                    });
+            });
 
-                   // Function to check the task status
-                   function checkTaskStatus(taskId) {
-                       setInterval(function() {
-                           $.ajax({
-                               url: `/task_status/${taskId}`,
-                               type: 'GET',
-                               success: function(response) {
-                                   if (response.status === 'success') {
-                                       $('#response-message').html(`<p style="color: green;">${response.message}</p>`);
-                                   } else if (response.status === 'error') {
-                                       $('#response-message').html(`<p style="color: red;">Error: ${response.message}</p>`);
-                                   }
-                               },
-                               error: function(xhr, status, error) {
-                                   $('#response-message').html(`<p style="color: red;">Error: ${xhr.responseJSON.message}</p>`);
-                               }
-                           });
-                       }, 3000); // Check every 3 seconds
-                   }
-               });
-           </script>
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('outputModal').style.display = 'none';
+            });
+            </script>
         </section>
     </main>
     <footer>

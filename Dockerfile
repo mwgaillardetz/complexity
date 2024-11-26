@@ -7,12 +7,16 @@ WORKDIR /app
 # Copy the app and dependencies
 COPY . /app
 
-# Install system dependencies
+# Install system dependencies and pipx
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip ffmpeg git && \
-    python3 -m pip install --user pipx && \
+    apt-get install -y ffmpeg git && \
+    python3 -m pip install pipx && \
     python3 -m pipx ensurepath && \
+    export PATH=/root/.local/bin:$PATH && \
     pipx install https://get.zotify.xyz
+
+# Add pipx to PATH for subsequent commands
+ENV PATH=/root/.local/bin:$PATH
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
